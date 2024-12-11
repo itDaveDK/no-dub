@@ -1,0 +1,40 @@
+/* makes the width for the logo 200px */
+.footerlogo{
+    width:100px;
+}
+
+/* makes all of the divs content into a column and centers items. */
+#box1{
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+p{
+margin:0;
+}
+
+/* makes all of the divs content into a column and centers items. */
+#box2{
+display:flex;
+flex-direction: column;
+align-items: center;
+}
+
+/* makes all of the divs content into a column and centers items. */
+#box3{
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* puts each of the column in the center and so the spacing between any items are equal */
+.footercontainer{
+    display:flex;
+    justify-content:space-evenly;
+    background-color:#D9D9D9;
+}
+/*  */
+.footercontainer > * {
+    flex-grow:1;
+}
