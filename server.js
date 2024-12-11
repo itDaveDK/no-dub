@@ -152,6 +152,7 @@ let handlePath = ((req, res, _path) => {
                 res.write(fs.readFileSync(fileMeta.safe_path));
                 fileMeta.handle_warning_and_errors();
                 fileMeta.console_print_request_end();
+                res.end();
                 return;
             }
         }
