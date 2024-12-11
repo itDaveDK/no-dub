@@ -3,9 +3,22 @@ var fs = require("fs");
 const path = require('path'); 
 
 listener = ((req, res) => {
-    res.writeHead(200, { 'Content-Type': "text/html" });
     if (req.url.endsWith("/"))
         req.url = req.url + "index.htm";
+
+    /* MIME types from: https://developer.mozilla.org/en-US/docs/Web/HTTP/MIME_types/Common_types */
+    if (req.url.endsWith(".htm"))
+        res.writeHead(200, { 'Content-Type': "text/html" });
+    else if (req.url.endsWith(".svg")) {
+        res.writeHead(200, { 'Content-Type': "image/svg+xml" });
+    }
+    else if (req.url.endsWith(".webp")) {
+        res.writeHead(200, { 'Content-Type': "image/webp" });
+    }
+    else if (req.url.endsWith(".css")) {
+        res.writeHead(200, { 'Content-Type': "text/css" });
+    }
+
     handlePath(req, res, path.join(__dirname, "contents", req.url.replace(/^(\.\.)+/, '')));
 });
 
