@@ -6,7 +6,6 @@ listener = ((req, res) => {
     if (req.url.endsWith("/"))
         req.url = req.url + "index.htm";
     else if (/\/[A-Za-z_æøåÆØÅ0-9]+$/.test(req.url)){
-        console.log("Regex is true!");
         req.url = req.url + "/index.htm";
     }
 
@@ -33,9 +32,9 @@ class ErrorMessages {
         this.res = _res;
     }
 
-    handle_warning_and_errors(res = this.res){
+    _handle_warning_and_errors(res = this.res){
         if (this.warnings.length == 0 && this.errors.length == 0)
-            return;
+            return false;
     
         let str = "";
         if (this.warnings.length != 0){
@@ -53,16 +52,18 @@ class ErrorMessages {
             str = str.substring(0, str.length-1);
         }
         console.log(str);
+
         if (this.errors.length != 0)
-            return res.end(str.replaceAll("\x1b[33m", "<p style='color:yellow'>")
-                              .replaceAll("\x1b[0m", "</p>")
-                              .replaceAll("\x1b[90m", "<p style='color:gray'>")
-                              .replaceAll("\x1b[31m", "<p style='color:red'>"));
+            res.end(str.replaceAll("\x1b[33m", "<p style='color:yellow'>")
+                       .replaceAll("\x1b[0m", "</p>")
+                       .replaceAll("\x1b[90m", "<p style='color:gray'>")
+                       .replaceAll("\x1b[31m", "<p style='color:red'>"));
+        return true;
     }
 
-    handle_error(error_msg, res = this.res){
+    _handle_error(error_msg, res = this.res){
         this.errors.push(error_msg);
-        this.handle_warning_and_errors(res);
+        return this._handle_warning_and_errors(res);
     }
 
     color(color, text){
@@ -94,6 +95,16 @@ class RequestedFile extends ErrorMessages {
         this.res = _res;
     }
 
+    handle_warning_and_errors(res = this.res) {
+        if (super._handle_warning_and_errors(res))
+            this.log();
+    }
+    
+    handle_error(error_msg, res = this.res){
+        if (super._handle_error(error_msg, res))
+            this.log();
+    }
+
     setStructure(_structure_dir_path, _structure_file_path, _structure_type){
         this.structure_dir_path = _structure_dir_path;
         this.structure_file_path = _structure_file_path;
@@ -114,11 +125,11 @@ class RequestedFile extends ErrorMessages {
     }
 
     console_print_request_start(){
-        console.log("\n\n--- Request START (" + this.basename + ") ---");
+        console.log("--- Request START (" + this.basename + ") ---");
     }
 
     console_print_request_end(){
-        console.log("--- Request END (" + this.basename + ") ---\n\n");
+        console.log("--- Request END   (" + this.basename + ") ---\n");
     }
 }
 
@@ -136,14 +147,14 @@ let handlePath = ((req, res, _path) => {
 
     if (fileMeta.basename == "favicon.ico"){
         fileMeta.warnings.push("favicon.ico does not exist!");
-        fileMeta.handle_warning_and_errors();
+        fileMeta.handle_warning_and_errors() && fileMeta.log();
         fileMeta.console_print_request_end();
         return;
     }
 
-    fileMeta.log();
+    //fileMeta.log();
     //let type = basename.match("\.([^\.]+)$")[1]; // First capture group
-    console.log(req.url, fileMeta.safe_path, fileMeta.basename, fileMeta.dirpath, fileMeta.type);
+    //console.log(req.url, fileMeta.safe_path, fileMeta.basename, fileMeta.dirpath, fileMeta.type);
 
     let stats;
     try {
@@ -159,6 +170,7 @@ let handlePath = ((req, res, _path) => {
             if (fileMeta.basename == "index.htm"){
                 if (searchForStructure(fileMeta, fileMeta.dirpath) != true)
                     return;
+
                 buildStructure(fileMeta, fileMeta.structure_dir_path, fileMeta.structure_type).then(() => {
                     fileMeta.handle_warning_and_errors();
                     fileMeta.console_print_request_end();
@@ -183,22 +195,18 @@ let searchForStructure = ((fileMeta, currentDir, isFirstDir = true) => {
 
     let stats;
     try {
-        console.log("PATH: " + path.join(currentDir, filename));
         stats = fs.statSync(path.join(currentDir, filename)); // Throws error if file does not exist
-        console.log("Stats: ", stats);
     } catch(e) {
-        console.log("Structure file does not exist. '" + fileMeta.dirpath + fileMeta.path.sep + filename + "'");
+        fileMeta.warnings.push("Structure file does not exist. '" + fileMeta.dirpath + path.sep + filename + "'");
         let parentDir = path.resolve(currentDir, "../");
         if (__dirname == parentDir){
             fileMeta.warnings.push("Could not find structure for requested url! (reached project root directory!)");
-            fileMeta.handle_warning_and_errors();
+            fileMeta.handle_warning_and_errors() && fileMeta.log();
             fileMeta.console_print_request_end();
             return;
         }
-        console.log("Searching for structure...");
-        console.log("Parent Dir: ", parentDir);
         if (fileMeta.dirpath == path.join(__dirname, "contents")){
-            fileMeta.handle_error("Structure file not found for current HTML file. (recurvsive)");
+            fileMeta.handle_error("Structure file not found for current HTML file. (recurvsive)") && fileMeta.log();
             fileMeta.console_print_request_end();
             return;
         }
@@ -212,11 +220,9 @@ let searchForStructure = ((fileMeta, currentDir, isFirstDir = true) => {
 
 let buildStructure = ((fileMeta, structurePath, structureType) => {
     return new Promise((resolve, reject) => {
-        console.log(structurePath, structureType);
         let lineReader = require('readline').createInterface({
             input: require('fs').createReadStream(path.join(structurePath, structureType))
         });
-        console.log(path.join(structurePath, structureType));
 
         let file_data_string = "";
     
@@ -252,25 +258,6 @@ let buildStructure = ((fileMeta, structurePath, structureType) => {
             else{
                 console.log(matches);
             }
-            /*
-            let filePath = tagLine.substring(tagLength);
-            let extension = filePath.split(/\.+/).pop();
-            let data;
-    
-            if (this.structure_type == "")
-            ;
-    
-            if (fs.existsSync('content/'+filePath))
-                data = fs.readFileSync('content/'+filePath, { encoding: 'utf8', flag: 'r' });
-            else {
-                res.write("alert(\"filePath: "+filePath+" not found!\");<script>alert(\"filePath: "+filePath+" not found!\");</script>");
-                console.log("File: '" + filePath + "' does not exist!");
-            }
-            console.log("Finished reading data! "+ filePath);
-            res.write("\n" + commentStart(extension) + " " + filePath + " " + commentEnd(extension) + "\n");
-            res.write(data);
-            res.write("\n" + commentStart(extension) + " " + filePath + " END " + commentEnd(extension) + "\n");
-            */
             lineReader.resume();
         });
 
@@ -288,9 +275,6 @@ let buildStructure = ((fileMeta, structurePath, structureType) => {
                 else
                     urls.push(urls[i - 1] + folders[i-1] + "/"); // (urls.length == 1 ? "" : "/")
             }
-            
-            console.log(folders);
-            console.log(urls);
 
             let str = "<a href='/'>Forside</a>";
             for (let i = 0; i < folders.length; i++){
@@ -307,7 +291,6 @@ let buildStructure = ((fileMeta, structurePath, structureType) => {
             if (tagData == "/global/header.htm"){
                 let content_parts = file_data.split("<body>");
                 content_parts[1] = content_parts[1].replace("nav-id=\"" + mainMenu + "\"", "nav-id=\"" + mainMenu + "\" active");
-                //content_parts[1] = content_parts[1].replace("<location-box>", "<location-box>" + "forside / " + folders.join(" / "));
                 if (folders.length != 0){
                     content_parts[1] = content_parts[1].replace("<location-box>", "<location-box>" + str);
 
@@ -315,7 +298,6 @@ let buildStructure = ((fileMeta, structurePath, structureType) => {
                     let dubMenuDom = "";
                     for (const file of fs.readdirSync(subNavPath)){
                         if (fs.statSync(subNavPath + path.sep + file).isDirectory()){
-                            console.log(file, folders[1]);
                             dubMenuDom += "<a href='/" + folders[0] + "/" + file + "'" + (((folders.length >= 2) && file == folders[1]) ? " active" : "")
                                        + "><vertical-center>" + file + "</vertical-center></a>";
                         }
@@ -327,8 +309,6 @@ let buildStructure = ((fileMeta, structurePath, structureType) => {
 
                     content_parts[1] = content_parts[1].replace("<sub-nav class=\"file-contents-index-hide\">", "<sub-nav class=\"file-contents-index-hide\">"
                                                                 + dubMenuDom);
-                    
-                    console.log(">>>>>>>>>>>>>> ||||||||||||||||||||||||||||||||||" + subNavPath);
                 }
 
                 return content_parts.join("");
@@ -337,14 +317,7 @@ let buildStructure = ((fileMeta, structurePath, structureType) => {
         });
 
         let send_file = ((fileMeta, _path, tagName, tagData) => {
-            if (_path.endsWith("global"))
-
-            console.log("$$$$$$$$$$$$$$$$$$$$$$$$$$    :", path.sep);
-            console.log(_path);
-            console.log(_path.split(path.sep).pop());
             if (/^[a-zA-Z0-9_æøåÆØÅ]*$/.test(_path.split(path.sep).pop())){ // If it does not conatin '.'
-                console.log("___________________________");
-                console.log(_path);
                 send_file(fileMeta, _path + ".htm", tagName, tagData + ".htm");
                 send_file(fileMeta, _path + ".css", tagName, tagData + ".css");
                 return;
@@ -359,14 +332,11 @@ let buildStructure = ((fileMeta, structurePath, structureType) => {
             }
         
             if (path_found == true && stats.isFile(_path)){
-                console.log("PPPPPPPPPP: '", _path, "'");
-                console.log(_path);
                 if (_path.endsWith(".css")){
                     if (file_data_string.includes("</head>") && tagData != "/global/header.css") {
                         let css_path = _path;
                         css_path = css_path.substring(fileMeta.contents_root.length);
                         css_path = css_path.replaceAll(path.sep, path.posix.sep);
-                        console.log("HHHHHHHHHHHHHHHH: ", css_path.substring(fileMeta.contents_root));
                         file_data_string = file_data_string.replace("</head>", "<link rel='stylesheet' href=\"" + css_path + "\"></head>");
                     }
                     else {
@@ -382,7 +352,7 @@ let buildStructure = ((fileMeta, structurePath, structureType) => {
         });
         
         lineReader.on('line', (line) => {
-            console.log(line);
+            //console.log(line);
             if (line.startsWith("[")){
                 let matches = line.match(/^\[([A-Z_]+)\](.*)$/);
                 if (matches != null){
@@ -390,7 +360,6 @@ let buildStructure = ((fileMeta, structurePath, structureType) => {
                     //return;
                 }
             }
-            console.log(line);
         });
 
         let beforeClose = (() => {
@@ -401,7 +370,6 @@ let buildStructure = ((fileMeta, structurePath, structureType) => {
         });
     
         lineReader.on('close', () => {
-            console.log("End sending this file");
             if (promise == null){
                 beforeClose();
                 resolve();

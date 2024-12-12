@@ -1,33 +1,3 @@
-nav *[active], sub-nav *[active]{
-    border-bottom: 4px solid red;
-    border-top:    4px solid transparent; /* To ensure text stay in center */
-    color:red;
-}
-
-location-box {
-    padding-left:10px;
-}
-
-location-box > a {
-    text-decoration: underline;
-}
-
-location-box > a:last-child {
-    text-decoration: none;
-}
-
-sub-nav {
-    display:block;
-    width:100%;
-    padding:10px;
-    background-color: gold;
-}
-
-/*******************************************
-* GLOBAL
-********************************************/
-
-
 /*******************************************
 * TOP
 ********************************************/
@@ -50,6 +20,12 @@ sub-nav {
 }
 
 /* NAVIGATION */
+nav *[active], sub-nav *[active]{
+    border-bottom: 4px solid red;
+    border-top:    4px solid transparent; /* To ensure text stay in center */
+    color:red;
+}
+
 nav, sub-nav {
     /* for parent flexbox */
     flex-grow:3;
@@ -86,4 +62,24 @@ nav > *, sub-nav > * {
 #top_buttons > button {
     width:100%;
     height:50%;
+}
+
+/* LOCATION BOX */
+sub-nav {
+    display:block;
+    width:100%;
+    padding:10px;
+    background-color: gold;
+}
+
+location-box {
+    padding-left:20px;
+}
+
+location-box > a {
+    text-decoration: underline;
+}
+
+location-box > a:last-child {
+    text-decoration: none;
 }
