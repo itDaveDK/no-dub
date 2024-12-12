@@ -4,37 +4,19 @@
     height:50px;
 }
 
-/* makes all of the divs content into a column and centers items. */
-#box1{
+flex-column {
+    flex-grow:1;
     display:flex;
     flex-direction: column;
-    align-items: center;
+    border-radius: 5px;
+    margin:25px;
 }
 
 p{
-    margin:3;
+    margin:3px;
 }
 
-/* makes all of the divs content into a column and centers items. */
-#box2{
-    display:flex;
-    flex-direction: column;
-    align-items: center;
-    border-radius: 5px;
-    border: 2px solid #FFC61E;
-    margin:25px;
-}
-
-/* makes all of the divs content into a column and centers items. */
-#box3{
-    display:flex;
-    flex-direction: column;
-    align-items: center;
-    border-radius: 5px;
-    border: 2px solid #FFC61E;
-    margin:25px;
-    height:165px;
-}
+/* footer > *:nth-child(2){ */
 
 a{
     text-decoration: none;
@@ -49,14 +31,12 @@ a:hover{
 }
 
 /* puts each of the column in the center and so the spacing between any items are equal */
-.footercontainer{
+footer{
     display:flex;
     justify-content:space-evenly;
     background-color:lightgray; 
     border-top:5px solid #FFC61E; padding:20px; /* adds a border at the top and gives it a yellow color */
 }
 
-/*  */
-.footercontainer > * {
-    flex-grow:1;
-}
+/* flex-grow divides space equally for all of the children of flexcontainer class because of child combinator selecter 'footer > *'  */
+

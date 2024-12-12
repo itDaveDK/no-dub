@@ -1,3 +1,18 @@
 * {
-	background-color: green;
+	box-sizing: border-box;
+	margin:0;
+	padding:0;
+	border:0;
+}
+body {
+	font-family: "Sen", serif;
+	font-optical-sizing: auto;
+	font-weight: 600;
+	font-style: normal;
+}
+:root{
+	--logo-red: #A32638;
+	--logo-blue: #002B7F;
+	--logo-green: #006854;
+	--logo-yellow: #FFC61E;
 }
