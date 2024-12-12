@@ -1,9 +1,6 @@
 <!DOCTYPE html>
-[FILE]/global/html_start.htm
+[FILE]/global/header
 [FILE]/global/style.css
 [FILE_LOCAL_IF_INHERIT]style.css
-[FILE]navbar
 [MAIN]
-[FILE]footer.css
-[FILE]footer.htm
-[FILE]/global/html_end.htm
+[FILE]/global/footer
