@@ -1,6 +1,7 @@
 /* makes the width for the logo 200px */
 .footerlogo{
     width:100px;
+    height:50px;
 }
 
 /* makes all of the divs content into a column and centers items. */
@@ -11,14 +12,17 @@
 }
 
 p{
-margin:0;
+    margin:3;
 }
 
 /* makes all of the divs content into a column and centers items. */
 #box2{
-display:flex;
-flex-direction: column;
-align-items: center;
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 5px;
+    border: 2px solid #FFC61E;
+    margin:25px;
 }
 
 /* makes all of the divs content into a column and centers items. */
@@ -26,14 +30,32 @@ align-items: center;
     display:flex;
     flex-direction: column;
     align-items: center;
+    border-radius: 5px;
+    border: 2px solid #FFC61E;
+    margin:25px;
+    height:165px;
+}
+
+a{
+    text-decoration: none;
+} 
+
+a:visited{
+    color:inherit;
+}
+
+a:hover{
+    color:#006854;
 }
 
 /* puts each of the column in the center and so the spacing between any items are equal */
 .footercontainer{
     display:flex;
     justify-content:space-evenly;
-    background-color:#D9D9D9;
+    background-color:lightgray; 
+    border-top:5px solid #FFC61E; padding:20px; /* adds a border at the top and gives it a yellow color */
 }
+
 /*  */
 .footercontainer > * {
     flex-grow:1;
