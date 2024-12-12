@@ -5,6 +5,10 @@ const path = require('path');
 listener = ((req, res) => {
     if (req.url.endsWith("/"))
         req.url = req.url + "index.htm";
+    else if (/\/[A-Za-z_æøåÆØÅ0-9]+$/.test(req.url)){
+        console.log("Regex is true!");
+        req.url = req.url + "/index.htm";
+    }
 
     /* MIME types from: https://developer.mozilla.org/en-US/docs/Web/HTTP/MIME_types/Common_types */
     if (req.url.endsWith(".htm"))
@@ -213,6 +217,8 @@ let buildStructure = ((fileMeta, structurePath, structureType) => {
             input: require('fs').createReadStream(path.join(structurePath, structureType))
         });
         console.log(path.join(structurePath, structureType));
+
+        let file_data_string = "";
     
         let promise = null;
         let handleTagLine = ((matches) => {
@@ -227,7 +233,7 @@ let buildStructure = ((fileMeta, structurePath, structureType) => {
                 });
             }
             else if (tagName == "FILE"){
-                let _path = "";
+                let _path;
                 if (tagData.startsWith("/")){
                     _path = path.join(fileMeta.contents_root, tagData.substring(1)); // .structure files are server side and therfor trusted. May contain '..'
                 }
@@ -235,53 +241,13 @@ let buildStructure = ((fileMeta, structurePath, structureType) => {
                     _path = path.join(structurePath, tagData);
                 }
 
-
-                let stats;
-                let path_found = true;
-                try {
-                    stats = fs.statSync(_path);
-                } catch(e) {
-                    console.log("CATCH!");
-                    path_found = false;
-                    fileMeta.warnings.push("Path does not exist (for [FILE] in structure '" + path.join(structurePath, structureType) + "')\n- File not found: '" + _path + "'\n");
-                }
-            
-                if (path_found == true && stats.isFile(_path)){
-                    fileMeta.res.write(fs.readFileSync(_path));
-                    console.log("!!!");
-                }
+                send_file(fileMeta, _path, tagName);
             }
             else if (tagName == "FILE_LOCAL_IF_INHERIT"){
-                let stats;
-                let path_found = true;
-                let _path = path.join(fileMeta.dirpath, tagData);
-                try {
-                    stats = fs.statSync(_path);
-                } catch(e) {
-                    console.log("CATCH!");
-                    path_found = false;
-                    fileMeta.warnings.push("Path does not exist (for [FILE_LOCAL_IF_INHERIT] in structure '" + path.join(structurePath, structureType) + "')\n- File not found: '" + _path + "'\n");
-                }
-            
-                if (path_found == true && stats.isFile(_path)){
-                    fileMeta.res.write(fs.readFileSync(_path));
-                }
+                send_file(fileMeta, path.join(fileMeta.dirpath, tagData), tagName);
             }
             else if (tagName == "MAIN"){
-                let stats;
-                let path_found = true;
-                let _path = fileMeta.safe_path;
-                try {
-                    stats = fs.statSync(_path);
-                } catch(e) {
-                    console.log("CATCH!");
-                    path_found = false;
-                    fileMeta.warnings.push("Path does not exist (for [MAIN] in structure '" + path.join(structurePath, structureType) + "')\n- File not found: '" + _path + "'\n");
-                }
-            
-                if (path_found == true && stats.isFile(_path)){
-                    fileMeta.res.write(fs.readFileSync(_path));
-                }
+                send_file(fileMeta, fileMeta.safe_path, tagName);
             }
             else{
                 console.log(matches);
@@ -307,6 +273,47 @@ let buildStructure = ((fileMeta, structurePath, structureType) => {
             */
             lineReader.resume();
         });
+
+        let send_file = ((fileMeta, _path, tagName) => {
+            console.log("$$$$$$$$$$$$$$$$$$$$$$$$$$    :", path.sep);
+            console.log(_path);
+            console.log(_path.split(path.sep).pop());
+            if (/^[a-zA-Z0-9_æøåÆØÅ]*$/.test(_path.split(path.sep).pop())){ // If it does not conatin '.'
+                console.log("___________________________");
+                console.log(_path);
+                send_file(fileMeta, _path + ".htm", tagName);
+                send_file(fileMeta, _path + ".css", tagName);
+                return;
+            }
+            let stats;
+            let path_found = true;
+            try {
+                stats = fs.statSync(_path);
+            } catch(e) {
+                path_found = false;
+                fileMeta.warnings.push("Path does not exist (for [" + tagName + "] in structure '" + path.join(structurePath, structureType) + "')\n- File not found: '" + _path + "'\n");
+            }
+        
+            if (path_found == true && stats.isFile(_path)){
+                console.log("PPPPPPPPPP: '", _path, "'");
+                console.log(_path);
+                if (_path.endsWith(".css")){
+                    if (file_data_string.includes("</head>")) {
+                        let css_path = _path;
+                        css_path = css_path.substring(fileMeta.contents_root.length);
+                        css_path = css_path.replaceAll(path.sep, path.posix.sep);
+                        console.log("HHHHHHHHHHHHHHHH: ", css_path.substring(fileMeta.contents_root));
+                        file_data_string = file_data_string.replace("</head>", "<link rel='stylesheet' href=\"" + css_path + "\"></head>");
+                    }
+                    else {
+                        file_data_string += "<style>" + fs.readFileSync(_path, 'utf8') + "</style>";
+                    }
+                }
+                else {
+                    file_data_string += fs.readFileSync(_path, 'utf8');
+                }
+            }
+        });
         
         lineReader.on('line', (line) => {
             console.log(line);
@@ -319,17 +326,24 @@ let buildStructure = ((fileMeta, structurePath, structureType) => {
             }
             console.log(line);
         });
+
+        let beforeClose = (() => {
+            file_data_string = file_data_string.replace("<head>", "<head>\n\t<style>.file-" + fileMeta.dirpath.split(path.sep).pop() + "-" + fileMeta.basename.substring(0, (fileMeta.basename.length - fileMeta.type.length)) + "{ display:block; }</style>");
+            fileMeta.res.write(file_data_string);
+        });
     
         lineReader.on('close', () => {
             console.log("End sending this file");
             if (promise == null){
                 console.log("Promise is NULL");
+                beforeClose();
                 resolve();
             }
             else {
                 console.log("Waiting for other promise...");
                 promise.then(() => {
                     console.log("Promise is __NOT__ NULL - DONE");
+                    beforeClose();
                     resolve();
                 }).catch((err) => {
                     reject(err);
