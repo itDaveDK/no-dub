@@ -3,7 +3,7 @@
     width:100px;
     height:50px;
 }
-
+/* flex-column is a custom html tag which are used in all columns instead of divs so rules can be aplied to all elements which has the flex-column tag and flex-grow does so that each columns will share avialbable space proportiornally and flex-direction:column; makes it so that each flex-column tag element is placed vertically like a column  */
 flex-column {
     flex-grow:1;
     display:flex;
