@@ -4,91 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/css2?family=Sen:wght@400..800&display=swap" rel="stylesheet">
- 
-    <style>
-        /*******************************************
-        * GLOBAL
-        ********************************************/
-        * {
-            box-sizing: border-box;
-        }
-        body {
-            margin:0;
-            padding:0;
-        }
-
-        /*******************************************
-        * TOP
-        ********************************************/
-        #top {
-            display:flex;
-            width:100%;
-            padding:.5vw;
-        }
-
-        /* LOGO */
-        #top > .logo {
-            max-width:20%;
-        }
-        #top > .logo img {
-            width:100%;
-        }
-        #top > .logo, #top_buttons {
-            flex-grow:1;
-        }
-
-        /* NAVIGATION */
-        nav {
-            /* for parent flexbox */
-            flex-grow:3;
-
-            /* for child flexboxes */
-            display:flex;
-            justify-content: space-around;
-        }
-
-        nav > * {
-            margin: 4px 2vw 4px 2vw; /* top, right, bottom & left */
-            background-color:gray;
-            width:100%;
-            text-align: center;
-            padding-top: auto;
-            padding-bottom: auto;
-
-            /* Children */
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-
-        nav > * {
-            margin: 4px 2vw 4px 2vw; /* top, right, bottom & left */
-            background-color:gray;
-            width:100%;
-            text-align: center;
-            padding-top: auto;
-            padding-bottom: auto;
-        }
-
-        /* BUTTONS RIGHT (LOGIN, SIGN UP) */
-        #top_buttons > button {
-            width:100%;
-            height:50%;
-        }
-    </style>
 </head>
 <body>
 <div id="top">
     <div class="logo">
-        <img src="/global/images/katholt_logo.svg" alt="Katholt">
+        <a nav-id="forside" href="/"><img src="/global/images/katholt_logo.svg" alt="Katholt"></a>
     </div>
     <nav>
-        <a><vertical-center>Om Katholt</vertical-center></a>
-        <a><vertical-center>Børnehave</vertical-center></a>
-        <a><vertical-center>Fritidshjem</vertical-center></a>
+        <a nav-id="katholt" href="/katholt/"><vertical-center>Om Katholt</vertical-center></a>
+        <a nav-id="boernehave" href="/boernehave/"><vertical-center>Børnehave</vertical-center></a>
+        <a nav-id="fritidshjem" href="/fritidshjem/"><vertical-center>Fritidshjem</vertical-center></a>
     </nav>
     <div id="top_buttons">
         <button>Log på intra</button><br>
         <button>Indmelding</button>
     </div>
 </div>
+<sub-nav class="file-contents-index-hide"></sub-nav>
+<location-box></location-box><br>
+<main>

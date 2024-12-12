@@ -241,13 +241,13 @@ let buildStructure = ((fileMeta, structurePath, structureType) => {
                     _path = path.join(structurePath, tagData);
                 }
 
-                send_file(fileMeta, _path, tagName);
+                send_file(fileMeta, _path, tagName, tagData);
             }
             else if (tagName == "FILE_LOCAL_IF_INHERIT"){
-                send_file(fileMeta, path.join(fileMeta.dirpath, tagData), tagName);
+                send_file(fileMeta, path.join(fileMeta.dirpath, tagData), tagName, tagData);
             }
             else if (tagName == "MAIN"){
-                send_file(fileMeta, fileMeta.safe_path, tagName);
+                send_file(fileMeta, fileMeta.safe_path, tagName, tagData);
             }
             else{
                 console.log(matches);
@@ -274,15 +274,79 @@ let buildStructure = ((fileMeta, structurePath, structureType) => {
             lineReader.resume();
         });
 
-        let send_file = ((fileMeta, _path, tagName) => {
+        let handle_special_files = ((file_data, fileMeta, _path, tagName, tagData) => {
+            let this_path = fileMeta.dirpath.substring(fileMeta.contents_root.length + 1, fileMeta.contents_root.length + 1 + (fileMeta.dirpath.length - fileMeta.contents_root.length));
+            let folders = this_path.split(path.sep);
+            if (folders.length == 1 && folders[0] == "")
+                folders = [];
+            
+            let urls = [];
+
+            for (let i = 0; i <= folders.length; i++){
+                if (urls.length == 0)
+                    urls.push("/");
+                else
+                    urls.push(urls[i - 1] + folders[i-1] + "/"); // (urls.length == 1 ? "" : "/")
+            }
+            
+            console.log(folders);
+            console.log(urls);
+
+            let str = "<a href='/'>Forside</a>";
+            for (let i = 0; i < folders.length; i++){
+                str += " / <a href='" + urls[i + 1] + "'>" + folders[i].replace("oe", "ø")
+                                                                       .replace("aa", "a")
+                                                                       .replace("ae", "æ") 
+                                                                       + "</a>";
+            }
+
+            let mainMenu = "forside";
+            if (folders.length != 0)
+                mainMenu = folders[0];
+
+            if (tagData == "/global/header.htm"){
+                let content_parts = file_data.split("<body>");
+                content_parts[1] = content_parts[1].replace("nav-id=\"" + mainMenu + "\"", "nav-id=\"" + mainMenu + "\" active");
+                //content_parts[1] = content_parts[1].replace("<location-box>", "<location-box>" + "forside / " + folders.join(" / "));
+                if (folders.length != 0){
+                    content_parts[1] = content_parts[1].replace("<location-box>", "<location-box>" + str);
+
+                    let subNavPath = path.join(fileMeta.contents_root, (folders[0] + path.sep));
+                    let dubMenuDom = "";
+                    for (const file of fs.readdirSync(subNavPath)){
+                        if (fs.statSync(subNavPath + path.sep + file).isDirectory()){
+                            console.log(file, folders[1]);
+                            dubMenuDom += "<a href='/" + folders[0] + "/" + file + "'" + (((folders.length >= 2) && file == folders[1]) ? " active" : "")
+                                       + "><vertical-center>" + file + "</vertical-center></a>";
+                        }
+                    }
+
+                    if (folders.length >= 2){
+                        dubMenuDom
+                    }
+
+                    content_parts[1] = content_parts[1].replace("<sub-nav class=\"file-contents-index-hide\">", "<sub-nav class=\"file-contents-index-hide\">"
+                                                                + dubMenuDom);
+                    
+                    console.log(">>>>>>>>>>>>>> ||||||||||||||||||||||||||||||||||" + subNavPath);
+                }
+
+                return content_parts.join("");
+            }
+            return file_data;
+        });
+
+        let send_file = ((fileMeta, _path, tagName, tagData) => {
+            if (_path.endsWith("global"))
+
             console.log("$$$$$$$$$$$$$$$$$$$$$$$$$$    :", path.sep);
             console.log(_path);
             console.log(_path.split(path.sep).pop());
             if (/^[a-zA-Z0-9_æøåÆØÅ]*$/.test(_path.split(path.sep).pop())){ // If it does not conatin '.'
                 console.log("___________________________");
                 console.log(_path);
-                send_file(fileMeta, _path + ".htm", tagName);
-                send_file(fileMeta, _path + ".css", tagName);
+                send_file(fileMeta, _path + ".htm", tagName, tagData + ".htm");
+                send_file(fileMeta, _path + ".css", tagName, tagData + ".css");
                 return;
             }
             let stats;
@@ -298,7 +362,7 @@ let buildStructure = ((fileMeta, structurePath, structureType) => {
                 console.log("PPPPPPPPPP: '", _path, "'");
                 console.log(_path);
                 if (_path.endsWith(".css")){
-                    if (file_data_string.includes("</head>")) {
+                    if (file_data_string.includes("</head>") && tagData != "/global/header.css") {
                         let css_path = _path;
                         css_path = css_path.substring(fileMeta.contents_root.length);
                         css_path = css_path.replaceAll(path.sep, path.posix.sep);
@@ -310,7 +374,9 @@ let buildStructure = ((fileMeta, structurePath, structureType) => {
                     }
                 }
                 else {
-                    file_data_string += fs.readFileSync(_path, 'utf8');
+                    let file_data = fs.readFileSync(_path, 'utf8');
+                    file_data = handle_special_files(file_data, fileMeta, _path, tagName, tagData);
+                    file_data_string += file_data;
                 }
             }
         });
@@ -328,21 +394,20 @@ let buildStructure = ((fileMeta, structurePath, structureType) => {
         });
 
         let beforeClose = (() => {
-            file_data_string = file_data_string.replace("<head>", "<head>\n\t<style>.file-" + fileMeta.dirpath.split(path.sep).pop() + "-" + fileMeta.basename.substring(0, (fileMeta.basename.length - fileMeta.type.length)) + "{ display:block; }</style>");
+            let class_name = "file-" + fileMeta.dirpath.split(path.sep).pop() + "-" + fileMeta.basename.substring(0, (fileMeta.basename.length - fileMeta.type.length));
+            file_data_string = file_data_string.replace("<head>", "<head>\n\t<style>." + class_name + "-display { display:block; }</style>");
+            file_data_string = file_data_string.replace("<head>", "<head>\n\t<style>." + class_name + "-hide { display:none; }</style>");
             fileMeta.res.write(file_data_string);
         });
     
         lineReader.on('close', () => {
             console.log("End sending this file");
             if (promise == null){
-                console.log("Promise is NULL");
                 beforeClose();
                 resolve();
             }
             else {
-                console.log("Waiting for other promise...");
                 promise.then(() => {
-                    console.log("Promise is __NOT__ NULL - DONE");
                     beforeClose();
                     resolve();
                 }).catch((err) => {

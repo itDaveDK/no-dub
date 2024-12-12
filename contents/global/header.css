@@ -1,0 +1,89 @@
+nav *[active], sub-nav *[active]{
+    border-bottom: 4px solid red;
+    border-top:    4px solid transparent; /* To ensure text stay in center */
+    color:red;
+}
+
+location-box {
+    padding-left:10px;
+}
+
+location-box > a {
+    text-decoration: underline;
+}
+
+location-box > a:last-child {
+    text-decoration: none;
+}
+
+sub-nav {
+    display:block;
+    width:100%;
+    padding:10px;
+    background-color: gold;
+}
+
+/*******************************************
+* GLOBAL
+********************************************/
+
+
+/*******************************************
+* TOP
+********************************************/
+#top {
+    display:flex;
+    width:100%;
+    padding:.5vw;
+}
+
+/* LOGO */
+#top > .logo {
+    max-width:20%;
+}
+#top > .logo img {
+    width:20vw;
+    height:5vw;
+}
+#top > .logo, #top_buttons {
+    flex-grow:1;
+}
+
+/* NAVIGATION */
+nav, sub-nav {
+    /* for parent flexbox */
+    flex-grow:3;
+
+    /* for child flexboxes */
+    display:flex;
+    justify-content: space-around;
+}
+
+nav > *, sub-nav > * {
+    margin: 4px 2vw 4px 2vw; /* top, right, bottom & left */
+    background-color:gray;
+    width:100%;
+    text-align: center;
+    padding-top: auto;
+    padding-bottom: auto;
+
+    /* Children */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+nav > *, sub-nav > * {
+    margin: 4px 2vw 4px 2vw; /* top, right, bottom & left */
+    background-color:gray;
+    width:100%;
+    text-align: center;
+    padding-top: auto;
+    padding-bottom: auto;
+}
+
+/* BUTTONS RIGHT (LOGIN, SIGN UP) */
+#top_buttons > button {
+    width:100%;
+    height:50%;
+}
