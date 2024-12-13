@@ -34,8 +34,8 @@ a:hover{
 footer{
     display:flex;
     justify-content:space-evenly;
-    background-color:lightgray; 
-    border-top:5px solid #FFC61E; padding:20px; /* adds a border at the top and gives it a yellow color */
+    background-color:#F1D016; 
+    borde-top:5px solid; padding:20px; /* adds a border at the top and gives it a yellow color */
 }
 
 /* flex-grow divides space equally for all of the children of flexcontainer class because of child combinator selecter 'footer > *'  */
