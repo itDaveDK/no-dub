@@ -309,12 +309,22 @@ let buildStructure = ((fileMeta, structurePath, structureType) => {
                         }
                     }
 
+                    // Sub menu for debug purpeses.
+                    let dubMenuDom2 = "";
                     if (folders.length >= 2){
-                        dubMenuDom
+                        let subNavPath = path.join(fileMeta.contents_root, (folders[0] + path.sep + folders[1] + path.sep));
+                        for (const file of fs.readdirSync(subNavPath)){
+                            if (fs.statSync(subNavPath + file).isDirectory()){
+                                dubMenuDom2 += "<a href='/" + folders[0] + "/" + folders[1] + "/" + file + "'" + (((folders.length >= 2) && file == folders[1]) ? " active" : "")
+                                        + "><vertical-center>" + to_user_freindly_string(file) + "</vertical-center></a>";
+                            }
+                        }
                     }
 
                     content_parts[1] = content_parts[1].replace("<sub-nav class=\"file-contents-index-hide\">", "<sub-nav class=\"file-contents-index-hide\">"
                                                                 + dubMenuDom);
+                    content_parts[1] = content_parts[1].replace("<sub-sub-nav class=\"file-contents-index-hide\">", "<sub-sub-nav class=\"file-contents-index-hide\">"
+                                                                + dubMenuDom2);
                 }
 
                 return content_parts.join("");
