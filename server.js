@@ -315,7 +315,7 @@ let buildStructure = ((fileMeta, structurePath, structureType) => {
                         let subNavPath = path.join(fileMeta.contents_root, (folders[0] + path.sep + folders[1] + path.sep));
                         for (const file of fs.readdirSync(subNavPath)){
                             if (fs.statSync(subNavPath + file).isDirectory()){
-                                dubMenuDom2 += "<a href='/" + folders[0] + "/" + folders[1] + "/" + file + "'" + (((folders.length >= 2) && file == folders[1]) ? " active" : "")
+                                dubMenuDom2 += "<a href='/" + folders[0] + "/" + folders[1] + "/" + file + "'" + (((folders.length > 2) && file == folders[2]) ? " active" : "")
                                         + "><vertical-center>" + to_user_freindly_string(file) + "</vertical-center></a>";
                             }
                         }

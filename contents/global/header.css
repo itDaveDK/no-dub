@@ -25,6 +25,9 @@ nav *[active], sub-nav *[active]{
     border-top:    4px solid transparent; /* To ensure text stay in center */
     color:red;
 }
+sub-sub-nav *[active] {
+    color:red;
+}
 
 nav, sub-nav {
     /* for parent flexbox */
