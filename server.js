@@ -353,7 +353,7 @@ let buildStructure = ((fileMeta, structurePath, structureType) => {
                         let css_path = _path;
                         css_path = css_path.substring(fileMeta.contents_root.length);
                         css_path = css_path.replaceAll(path.sep, path.posix.sep);
-                        file_data_string = file_data_string.replace("</head>", "<link rel='stylesheet' href=\"" + css_path + "\"></head>");
+                        file_data_string = file_data_string.replace("</head>", "\t<link rel='stylesheet' href=\"" + css_path + "\">\n</head>");
                     }
                     else {
                         file_data_string += "<style>" + fs.readFileSync(_path, 'utf8') + "</style>";
