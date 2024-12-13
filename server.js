@@ -2,15 +2,9 @@ var http = require("http");
 var fs = require("fs");
 const path = require('path'); 
 
-listener = ((req, res) => {
-    if (req.url.endsWith("/"))
-        req.url = req.url + "index.htm";
-    else if (/\/[A-Za-z_æøåÆØÅ0-9]+$/.test(req.url)){
-        req.url = req.url + "/index.htm";
-    }
-
-    /* MIME types from: https://developer.mozilla.org/en-US/docs/Web/HTTP/MIME_types/Common_types */
-    if (req.url.endsWith(".htm"))
+let writeHeadCustom = ((res, statusCode, mime_type) => {
+    res.writeHead(statusCode, {mime_type});
+    /*if (req.url.endsWith(".htm"))
         res.writeHead(200, { 'Content-Type': "text/html" });
     else if (req.url.endsWith(".svg")) {
         res.writeHead(200, { 'Content-Type': "image/svg+xml" });
@@ -20,16 +14,39 @@ listener = ((req, res) => {
     }
     else if (req.url.endsWith(".css")) {
         res.writeHead(200, { 'Content-Type': "text/css" });
+    }*/
+});
+
+listener = ((req, res) => {
+    if (req.url.endsWith("/"))
+        req.url = req.url + "index.htm";
+    else if (/\/[A-Za-z_æøåÆØÅ0-9]+$/.test(req.url)){
+        req.url = req.url + "/index.htm";
     }
 
-    handlePath(req, res, path.join(__dirname, "contents", req.url.replace(/^(\.\.)+/, '')));
+    /* MIME types from: https://developer.mozilla.org/en-US/docs/Web/HTTP/MIME_types/Common_types */
+    let mime_type = "text/html";
+    if (req.url.endsWith(".htm"))
+        mime_type = { 'Content-Type': "text/html" };
+    else if (req.url.endsWith(".svg")) {
+        mime_type = { 'Content-Type': "image/svg+xml" };
+    }
+    else if (req.url.endsWith(".webp")) {
+        mime_type = { 'Content-Type': "image/webp" };
+    }
+    else if (req.url.endsWith(".css")) {
+        mime_type = { 'Content-Type': "text/css" };
+    }
+
+    handlePath(req, res, path.join(__dirname, "contents", req.url.replace(/^(\.\.)+/, '')), mime_type);
 });
 
 class ErrorMessages {
-    constructor(_res){
+    constructor(_res, _mime_type){
         this.warnings = [];
         this.errors = [];
         this.res = _res;
+        this.mime_type = _mime_type;
     }
 
     _handle_warning_and_errors(res = this.res){
@@ -53,11 +70,13 @@ class ErrorMessages {
         }
         console.log(str);
 
-        if (this.errors.length != 0)
+        if (this.errors.length != 0){
+            writeHeadCustom(res, 500, this.mime_type); 
             res.end(str.replaceAll("\x1b[33m", "<p style='color:yellow'>")
                        .replaceAll("\x1b[0m", "</p>")
                        .replaceAll("\x1b[90m", "<p style='color:gray'>")
                        .replaceAll("\x1b[31m", "<p style='color:red'>"));
+        }
         return true;
     }
 
@@ -83,8 +102,8 @@ class RequestedFile extends ErrorMessages {
     structure_file_path = null;
     structure_type = null;
 
-    constructor(_path, _safe_path, _basename, _type, _dirpath, _req, _res) {
-        super(_res);
+    constructor(_path, _safe_path, _basename, _type, _dirpath, _req, _res, _mime_type) {
+        super(_res, _mime_type);
         this.path = _path;
         this.safe_path = _safe_path; 
         this.basename = _basename;
@@ -93,6 +112,7 @@ class RequestedFile extends ErrorMessages {
         this.contents_root = path.join(__dirname, "contents")
         this.req = _req;
         this.res = _res;
+        this.mime_type = _mime_type;
     }
 
     handle_warning_and_errors(res = this.res) {
@@ -133,14 +153,14 @@ class RequestedFile extends ErrorMessages {
     }
 }
 
-let handlePath = ((req, res, _path) => {
+let handlePath = ((req, res, _path, mime_type) => {
     let fileMeta;
     {
         let safe_path = path.join(_path.replace(/^(\.\.)+/, '')); 
         let basename = path.basename(safe_path);
         let type = path.extname(safe_path);
         let dirpath = path.dirname(safe_path);
-        fileMeta = new RequestedFile(_path, safe_path, basename, type, dirpath, req, res);
+        fileMeta = new RequestedFile(_path, safe_path, basename, type, dirpath, req, res, mime_type);
     }
 
     fileMeta.console_print_request_start();
@@ -172,18 +192,24 @@ let handlePath = ((req, res, _path) => {
                     return;
 
                 buildStructure(fileMeta, fileMeta.structure_dir_path, fileMeta.structure_type).then(() => {
-                    fileMeta.handle_warning_and_errors();
+                    if (fileMeta.handle_warning_and_errors())
+                        writeHeadCustom(res, 200, fileMeta.mime_type);
                     fileMeta.console_print_request_end();
                     res.end();
                 });
             }
             else {
                 res.write(fs.readFileSync(fileMeta.safe_path));
-                fileMeta.handle_warning_and_errors();
+                if (fileMeta.handle_warning_and_errors())
+                    writeHeadCustom(res, 200, fileMeta.mime_type);
                 fileMeta.console_print_request_end();
                 res.end();
                 return;
             }
+        }
+        else {
+            writeHeadCustom(res, 500, "text/plain");
+            res.end("Structure file prohibited from being generated: " + fileMeta.safe_path);
         }
     }
 });
