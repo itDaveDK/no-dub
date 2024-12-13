@@ -261,6 +261,15 @@ let buildStructure = ((fileMeta, structurePath, structureType) => {
             lineReader.resume();
         });
 
+        let to_user_freindly_string = ((str) => {
+            return str.charAt(0).toUpperCase() +
+               str.replace("oe", "ø")
+               .replaceAll("aa", "a")
+               .replaceAll("ae", "æ") 
+               .replaceAll("_", " ") 
+               .slice(1)
+        });
+
         let handle_special_files = ((file_data, fileMeta, _path, tagName, tagData) => {
             let this_path = fileMeta.dirpath.substring(fileMeta.contents_root.length + 1, fileMeta.contents_root.length + 1 + (fileMeta.dirpath.length - fileMeta.contents_root.length));
             let folders = this_path.split(path.sep);
@@ -278,10 +287,7 @@ let buildStructure = ((fileMeta, structurePath, structureType) => {
 
             let str = "<a href='/'>Forside</a>";
             for (let i = 0; i < folders.length; i++){
-                str += " / <a href='" + urls[i + 1] + "'>" + folders[i].replace("oe", "ø")
-                                                                       .replace("aa", "a")
-                                                                       .replace("ae", "æ") 
-                                                                       + "</a>";
+                str += " / <a href='" + urls[i + 1] + "'>" + to_user_freindly_string(folders[i]) + "</a>";
             }
 
             let mainMenu = "forside";
@@ -299,7 +305,7 @@ let buildStructure = ((fileMeta, structurePath, structureType) => {
                     for (const file of fs.readdirSync(subNavPath)){
                         if (fs.statSync(subNavPath + path.sep + file).isDirectory()){
                             dubMenuDom += "<a href='/" + folders[0] + "/" + file + "'" + (((folders.length >= 2) && file == folders[1]) ? " active" : "")
-                                       + "><vertical-center>" + file + "</vertical-center></a>";
+                                       + "><vertical-center>" + to_user_freindly_string(file) + "</vertical-center></a>";
                         }
                     }
 
