@@ -2,7 +2,9 @@ body {
     margin:0;
     padding:0;
 }
-
+#børnehave_knap{
+background-color: #FFC61E;
+}
 * {
 	box-sizing: border-box;
 	margin:0;
