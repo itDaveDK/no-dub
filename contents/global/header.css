@@ -1,3 +1,6 @@
+
+/*** header.css is included internal in the file to prevent jitter in the nav bar ***/ 
+
 /*******************************************
 * TOP
 ********************************************/
@@ -23,6 +26,9 @@
 nav *[active], sub-nav *[active]{
     border-bottom: 4px solid red;
     border-top:    4px solid transparent; /* To ensure text stay in center */
+    color:red;
+}
+sub-sub-nav *[active] {
     color:red;
 }
 
