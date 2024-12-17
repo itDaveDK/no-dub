@@ -4,13 +4,14 @@
     height:50px;
 }
 
+/* flex-column is a custom html tag which are used in all columns instead of divs so rules can be aplied to all elements which has the flex-column tag and flex-grow does so that each columns will share avialbable space proportiornally and flex-direction:column; makes it so that each flex-column tag element is placed vertically like a column  */
 flex-column {
     flex-grow:1;
     display:flex;
     flex-direction: column;
     border-radius: 5px;
     margin:25px;
-}
+    }
 
 p{
     margin:3px;
@@ -20,7 +21,7 @@ p{
 
 a{
     text-decoration: none;
-} 
+}
 
 a:visited{
     color:inherit;
@@ -33,9 +34,9 @@ a:hover{
 /* puts each of the column in the center and so the spacing between any items are equal */
 footer{
     display:flex;
-    justify-content:space-evenly;
-    background-color:lightgray; 
-    border-top:5px solid #FFC61E; padding:20px; /* adds a border at the top and gives it a yellow color */
+    justify-content:space-evenly; 
+    background-color:#a0d9ef;
+    border-top: solid 4px;
 }
 
 /* flex-grow divides space equally for all of the children of flexcontainer class because of child combinator selecter 'footer > *'  */
