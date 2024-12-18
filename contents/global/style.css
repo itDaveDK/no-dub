@@ -9,12 +9,14 @@ body {
 	padding:0;
 	border:0;
 }
+
 body {
 	font-family: "Sen", serif;
 	font-optical-sizing: auto;
 	font-weight: 600;
 	font-style: normal;
 }
+
 :root{
 	--logo-red: #A32638;
 	--logo-blue: #002B7F;
@@ -27,6 +29,18 @@ body {
 	--button-blue: #85AEFF;
 	--hot-pink: #FF7E91;
 }
+
 main {
 	margin:20px;
+}
+
+.main-content-box {
+	display:flex;
+	width:95%;
+	background-color:gold;
+	margin:auto;
+}
+
+h1 {
+	background-color: var(--button-green);
 }
