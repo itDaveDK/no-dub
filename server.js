@@ -3,7 +3,8 @@ var fs = require("fs");
 const path = require('path'); 
 
 let writeHeadCustom = ((res, statusCode, mime_type) => {
-    res.writeHead(statusCode, {mime_type});
+    console.log(mime_type);
+    res.writeHead(statusCode, mime_type);
     /*if (req.url.endsWith(".htm"))
         res.writeHead(200, { 'Content-Type': "text/html" });
     else if (req.url.endsWith(".svg")) {
@@ -76,8 +77,9 @@ class ErrorMessages {
                        .replaceAll("\x1b[0m", "</p>")
                        .replaceAll("\x1b[90m", "<p style='color:gray'>")
                        .replaceAll("\x1b[31m", "<p style='color:red'>"));
+            return true;
         }
-        return true;
+        return false;
     }
 
     _handle_error(error_msg, res = this.res){
@@ -116,8 +118,12 @@ class RequestedFile extends ErrorMessages {
     }
 
     handle_warning_and_errors(res = this.res) {
-        if (super._handle_warning_and_errors(res))
+        let boolval = super._handle_warning_and_errors(res);
+        if (boolval){
             this.log();
+            return true;
+        }
+        return false;
     }
     
     handle_error(error_msg, res = this.res){
@@ -167,7 +173,7 @@ let handlePath = ((req, res, _path, mime_type) => {
 
     if (fileMeta.basename == "favicon.ico"){
         fileMeta.warnings.push("favicon.ico does not exist!");
-        fileMeta.handle_warning_and_errors() && fileMeta.log();
+        fileMeta.handle_warning_and_errors();
         fileMeta.console_print_request_end();
         return;
     }
@@ -191,17 +197,23 @@ let handlePath = ((req, res, _path, mime_type) => {
                 if (searchForStructure(fileMeta, fileMeta.dirpath) != true)
                     return;
 
-                buildStructure(fileMeta, fileMeta.structure_dir_path, fileMeta.structure_type).then(() => {
+                buildStructure(fileMeta, fileMeta.structure_dir_path, fileMeta.structure_type).then((data_str) => {
                     if (fileMeta.handle_warning_and_errors())
+                        writeHeadCustom(res, 500, "text/html");
+                    else (fileMeta.handle_warning_and_errors())
                         writeHeadCustom(res, 200, fileMeta.mime_type);
+                    fileMeta.res.write(data_str);
                     fileMeta.console_print_request_end();
                     res.end();
                 });
             }
             else {
-                res.write(fs.readFileSync(fileMeta.safe_path));
                 if (fileMeta.handle_warning_and_errors())
+                    writeHeadCustom(res, 404, "text/html");
+                else
                     writeHeadCustom(res, 200, fileMeta.mime_type);
+                //console.log(fileMeta.mime_type);
+                res.write(fs.readFileSync(fileMeta.safe_path));
                 fileMeta.console_print_request_end();
                 res.end();
                 return;
@@ -227,12 +239,12 @@ let searchForStructure = ((fileMeta, currentDir, isFirstDir = true) => {
         let parentDir = path.resolve(currentDir, "../");
         if (__dirname == parentDir){
             fileMeta.warnings.push("Could not find structure for requested url! (reached project root directory!)");
-            fileMeta.handle_warning_and_errors() && fileMeta.log();
+            fileMeta.handle_warning_and_errors();
             fileMeta.console_print_request_end();
             return;
         }
         if (fileMeta.dirpath == path.join(__dirname, "contents")){
-            fileMeta.handle_error("Structure file not found for current HTML file. (recurvsive)") && fileMeta.log();
+            fileMeta.handle_error("Structure file not found for current HTML file. (recurvsive)");
             fileMeta.console_print_request_end();
             return;
         }
@@ -408,18 +420,16 @@ let buildStructure = ((fileMeta, structurePath, structureType) => {
             let class_name = "file-" + fileMeta.dirpath.split(path.sep).pop() + "-" + fileMeta.basename.substring(0, (fileMeta.basename.length - fileMeta.type.length));
             file_data_string = file_data_string.replace("<head>", "<head>\n\t<style>." + class_name + "-display { display:block; }</style>");
             file_data_string = file_data_string.replace("<head>", "<head>\n\t<style>." + class_name + "-hide { display:none; }</style>");
-            fileMeta.res.write(file_data_string);
+            return file_data_string;
         });
     
         lineReader.on('close', () => {
             if (promise == null){
-                beforeClose();
-                resolve();
+                resolve(beforeClose());
             }
             else {
                 promise.then(() => {
-                    beforeClose();
-                    resolve();
+                    resolve(beforeClose());
                 }).catch((err) => {
                     reject(err);
                 });
