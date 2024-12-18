@@ -17,6 +17,10 @@ p{
     margin:3px;
 }
 
+.header {
+    font-size:125%;
+}
+
 /* footer > *:nth-child(2){ */
 
 a{

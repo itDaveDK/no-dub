@@ -1,0 +1,86 @@
+#choices-outer{
+	background-image: url('/global/images/sky_and_sun_background.webp');
+}
+
+#choices {
+    justify-content:center;
+    display:flex;
+    gap:5%;
+    margin-top: 5vh;
+    margin-bottom: 5vh;
+}
+
+choice {
+    width:45%;
+    height:50vh;
+    background-position: center;
+    background-size: 100% auto;
+    text-align: center;
+}
+
+choice > p {
+    margin-top: 25vh;
+    font-size:300%;
+    min-width:70%;
+    margin-left:10%;
+    margin-right:10%;
+    border: 2px solid var(--logo-blue);
+    background-color: var(--button-blue);
+}
+
+choice:first-child {
+    background-image: url('/global/images/happy_kindergarden_children_and_parents.jpg');
+}
+
+choice:nth-child(2) {
+    background-image: url('/global/images/children_having_fun.webp');
+    background-size: auto 100%;
+}
+
+#choices-outer .read_more {
+    text-align: center;
+    width:40%;
+}
+
+vertical-splits {
+    display:flex;
+    justify-content: space-evenly;
+}
+
+#values {
+    margin-bottom:4%;
+}
+
+#values > vertical-split:first-child {
+    width: 60%;
+}
+
+#values > vertical-split:nth-child(2) {
+    flex-grow: 1;
+}
+
+values-box {
+    display:flex;
+    gap:2%;
+    margin:2%;
+}
+
+value {
+    width:33.33%;
+}
+
+#values-outer {
+    background-image: url('/global/images/grass_and_sky.webp');
+    background-position: bottom;
+    background-size: 100% auto;
+}
+
+#values .read_more {
+	max-width:60%;
+	margin:auto;
+}
+
+#flower_kid {
+    width:100%;
+    margin:auto;
+}
