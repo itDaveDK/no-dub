@@ -28,13 +28,10 @@ body {
 	--pink: #D572AD;  
 	--button-red: #FF7E91;  
 	--button-green: #7CE7A8;
+	--column-green: #C2E7D1;
 	--button-blue: #85AEFF;
 	--hot-pink: #FF7E91;
 	--h1-size: 4vw;
-}
-
-main {
-	margin:20px;
 }
 
 main-content-boxes {
@@ -62,6 +59,20 @@ h1 > span {
 	padding:.2vw;
 	padding-left:.5vw;
 	padding-right:.5vw;
+}
+
+banner-header{
+    background-image: url('/global/images/sky_and_leaves.webp');
+    background-position: bottom;
+    background-size: auto 100%;
+    display:block;
+    width:100%;
+    
+}
+
+banner-header h1{
+    background-color: transparent;
+    padding:100px;
 }
 
 h2 {
@@ -100,5 +111,15 @@ vertical-splits {
 
 vertical-split {
     flex-grow: 1;
+	flex-basis: auto;
+}
+
+.columns{
+	display:flex;
+    justify-content: space-evenly;
+}
+
+column{
+	flex-grow: 1;
 	flex-basis: auto;
 }
