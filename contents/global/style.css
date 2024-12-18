@@ -40,7 +40,6 @@ main {
 main-content-boxes {
 	display:flex;
 	width:95%;
-	background-color:rgba(0,0,0,.2);
 	margin:auto;
 	flex-direction: column; 
 }
@@ -80,6 +79,11 @@ h2 > span {
 	padding-right:.5vw;
 }
 
+h3 {
+	text-align:center;
+	font-size:180%;
+}
+
 .read_more {
     font-size:200%;
     margin-left:10%;
@@ -87,4 +91,14 @@ h2 > span {
     border: 2px solid var(--button-red);
     background-color: var(--pink);
 	text-align:center;
+}
+
+vertical-splits {
+    display:flex;
+    justify-content: space-evenly;
+}
+
+vertical-split {
+    flex-grow: 1;
+	flex-basis: auto;
 }
