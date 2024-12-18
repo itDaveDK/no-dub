@@ -10,7 +10,7 @@
     margin-bottom: 5vh;
 }
 
-choice {
+a.choice {
     width:45%;
     height:50vh;
     background-position: center;
@@ -18,7 +18,7 @@ choice {
     text-align: center;
 }
 
-choice > p {
+a.choice > p {
     margin-top: 25vh;
     font-size:300%;
     min-width:70%;
@@ -28,23 +28,19 @@ choice > p {
     background-color: var(--button-blue);
 }
 
-choice:first-child {
+a.choice:first-child {
     background-image: url('/global/images/happy_kindergarden_children_and_parents.jpg');
 }
 
-choice:nth-child(2) {
+a.choice:nth-child(2) {
     background-image: url('/global/images/children_having_fun.webp');
-    background-size: auto 100%;
+    background-size: auto 60%;
 }
 
 #choices-outer .read_more {
     text-align: center;
-    width:40%;
-}
-
-vertical-splits {
-    display:flex;
-    justify-content: space-evenly;
+    max-width:30%;
+    background-color: yellowgreen;
 }
 
 #values {
@@ -52,11 +48,12 @@ vertical-splits {
 }
 
 #values > vertical-split:first-child {
-    width: 60%;
+    width: 70vw;
 }
 
 #values > vertical-split:nth-child(2) {
     flex-grow: 1;
+    width: 30vw;
 }
 
 values-box {
@@ -82,5 +79,38 @@ value {
 
 #flower_kid {
     width:100%;
-    margin:auto;
+    padding-top:5vh;
+    padding-bottom:5vh;
+}
+
+values-box {
+    margin-bottom: 8vh;
+}
+
+#registration > vertical-splits {
+    margin:3vw;
+}
+
+#registration > vertical-splits > vertical-split {
+    display:flex;
+    flex-direction: column;
+}
+
+#registration {
+    background-image: url('/global/images/worms_in_dirt.webp');
+    background-size: 100% auto;
+}
+
+#kindergarden_boy {
+    background-image: url('/global/images/rainy_boy.webp');
+    background-size: 100% auto;
+    height:40vh;
+    width:100%;
+}
+
+#children_legs{
+    background-image: url('/global/images/legs_of_children.webp');
+    background-size: 100% auto;
+    height:40vh;
+    width:100%;
 }
