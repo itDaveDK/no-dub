@@ -273,7 +273,7 @@ let buildStructure = ((fileMeta, structurePath, structureType) => {
     
             if (tagName == "THIS_STRUCTURE"){
                 promise = new Promise((resolve, reject) => {
-                    return buildStructure(fileMeta, structurePath, "local.structure").then(() => resolve());
+                    return buildStructure(fileMeta, structurePath, "local.structure").then((str) => resolve(str));
                 });
             }
             else if (tagName == "FILE"){
@@ -428,7 +428,8 @@ let buildStructure = ((fileMeta, structurePath, structureType) => {
                 resolve(beforeClose());
             }
             else {
-                promise.then(() => {
+                promise.then((data_str) => {
+                    file_data_string = data_str;
                     resolve(beforeClose());
                 }).catch((err) => {
                     reject(err);
