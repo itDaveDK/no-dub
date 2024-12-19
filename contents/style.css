@@ -31,11 +31,14 @@ a.choice > p {
 
 a.choice:first-child {
     background-image: url('/global/images/happy_kindergarden_children_and_parents.jpg');
+    background-size: auto 100%;
+    background-repeat: no-repeat;
 }
 
 a.choice:nth-child(2) {
     background-image: url('/global/images/children_having_fun.webp');
     background-size: auto 100%;
+    background-repeat: no-repeat;
 }
 
 #choices-outer .read_more {
@@ -70,7 +73,9 @@ value {
 
 #values-outer {
     background-image: url('/global/images/grass_and_sky.webp');
-    background-position: top;
+    background-position: bottom;
+    background-color: #C3E8F3;
+    background-repeat: no-repeat;
     background-size: 100% auto;
 }
 
@@ -96,7 +101,10 @@ value {
 
 #registration {
     background-image: url('/global/images/worms_in_dirt.webp');
-    background-size: 100% auto;
+    background-size: auto auto;
+    background-position: center;
+    background-color:#493016;
+    background-repeat: no-repeat;
 }
 
 #kindergarden_boy {

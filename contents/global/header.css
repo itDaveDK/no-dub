@@ -25,16 +25,19 @@
 
 /* NAVIGATION */
 nav *[data-active], sub-nav *[data-active]{
-    border-bottom: 4px solid red;
+    border-bottom: 4px solid rgb(255,200,200);
     padding-top:    4px solid transparent; /* To ensure text stay in center */
-    color:red;
+    color:rgb(255,200,200);
+    //text-shadow: -1px -1px 0 #F00, 1px -1px 0 #F00, -1px 1px 0 #F00, 1px 1px 0 #F00;
 }
 sub-sub-nav *[data-active] {
-    color:red;
+    color:rgb(255,200,200);
+    //text-shadow: -1px -1px 0 #F00, 1px -1px 0 #F00, -1px 1px 0 #F00, 1px 1px 0 #F00;
 }
 
 nav a {
     border: 1px solid black;
+    box-shadow: 0 2px 20px -5px rgba(0, 0, 0, .7);
 }
 
 nav, sub-nav {
@@ -75,6 +78,8 @@ nav > *, sub-nav > * {
     margin:1.225%;
     padding-top:2.5%;
     pointer-events: none;
+    box-shadow: 0 2px 10px -5px rgba(0, 0, 0, .7);
+    outline: 1px solid black;
 }
 
 /* LOCATION BOX */

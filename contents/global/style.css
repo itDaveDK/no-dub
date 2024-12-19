@@ -164,8 +164,8 @@ time-lines {
 }
 
 .red {
-	color:red;
-	border-bottom: 2px solid red;
+	color:rgb(255,200,200);
+	border-bottom: 2px solid rgb(255,200,200);
 	border-top: 2px solid transparent;
 	padding-top:calc(2.5% - 2px) !important;
 }
