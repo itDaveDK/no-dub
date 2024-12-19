@@ -8,7 +8,7 @@
     display:flex;
     width:100%;
     padding:.5vw;
-    background-color:84AEFF;
+    background-color:#84AEFF;
 }
 
 /* LOGO */
@@ -26,11 +26,15 @@
 /* NAVIGATION */
 nav *[data-active], sub-nav *[data-active]{
     border-bottom: 4px solid red;
-    border-top:    4px solid transparent; /* To ensure text stay in center */
+    padding-top:    4px solid transparent; /* To ensure text stay in center */
     color:red;
 }
 sub-sub-nav *[data-active] {
     color:red;
+}
+
+nav a {
+    border: 1px solid black;
 }
 
 nav, sub-nav {
