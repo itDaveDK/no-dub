@@ -30,7 +30,7 @@ a.choice > p {
 }
 
 a.choice:first-child {
-    background-image: url('/global/images/happy_kindergarden_children_and_parents.jpg');
+    background-image: url('/global/images/happy_kindergarden_children_and_parents.webp');
     background-size: auto 100%;
     background-repeat: no-repeat;
 }
