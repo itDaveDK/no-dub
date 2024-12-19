@@ -13,7 +13,7 @@ h3 {
     text-align: left;
 }
 
-column{
+data-column{
 	max-width:45%;
     flex-grow:1;
     display:flex;

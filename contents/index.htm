@@ -1,7 +1,7 @@
 <main-content-boxes>
   <main-content-box id="choices-outer">
     <h1><span>Velkommen til Børnegården Katholt</span></h1>
-    <div id="choices">
+    <div class="choices">
       <a class="choice" href="boernehave/">
         <p>Børnehaven</p>
       </a>
@@ -9,7 +9,7 @@
         <p>Fritidshjemmet</p>
       </a>
     </div>
-    <div id="choices">
+    <div class="choices">
       <div class="read_more">
         <a href="boernehave/">Læs mere</a>
       </div>
@@ -24,7 +24,7 @@
       <vertical-split>
         <h2><span>Katholts Værdier</span></h2>
         <values-box>
-          <value>
+          <data-value>
             <p class="header">Vi er nysgerrige</p>
 
             Vi har antennerne ude!
@@ -32,8 +32,8 @@
             Vi søger ny viden og opfanger nye impulser for at udvikle fremtidens løsninger!
 
             Det er lærerigt! 
-          </value>
-          <value>
+          </data-value>
+          <data-value>
             <p class="header">Vi handler</p>
 
    
@@ -41,8 +41,8 @@
             Vores arbejde nytter, og vi sætter handling bag ordene.
              
             Det giver resultater hver gang!          
-          </value>
-          <value>
+          </data-value>
+          <data-value>
             <p class="header">Vi er ordenlige</p>
 
             Vi løser opgaverne med høj faglighed og kvalitet.
@@ -53,12 +53,12 @@
             Vi gør os umage
              
             Det kan du stole på!
-          </value>
+          </data-value>
         </values-box>
         <div class="read_more"><a href="katholt/#katholt_values">Læs mere</a></div>
       </vertical-split>
       <vertical-split>
-        <img src="/global/images/kid_holding_flower.webp" id="flower_kid" />
+        <img src="/global/images/kid_holding_flower.webp" id="flower_kid" alt="A kid holding a flower">
       </vertical-split>
     </vertical-splits>
   </main-content-box>
@@ -68,31 +68,31 @@
     <vertical-splits>
 
       <vertical-split style="cursor: pointer;" onclick="window.location.href = '/boernehave#indskriving_og_takster_boernehave'">
-        <column style="pointer-events:none;">
+        <data-column style="pointer-events:none;">
           <h3 class="h3_frontpage">Børnehave</h3>
-        </column>
-        <column style="pointer-events:none;" id="kindergarden_boy">
+        </data-column>
+        <data-column style="pointer-events:none;" id="kindergarden_boy">
           
-        </column>
-        <column style="pointer-events:none;">
+        </data-column>
+        <data-column style="pointer-events:none;">
           <div style="pointer-events:none;" class="read_more">
             <a href="/boernehave#indskriving_og_takster_boernehave">Læs mere</a>
           </div>
-        </column>
+        </data-column>
       </vertical-split>
 
       <vertical-split style="cursor: pointer;" onclick="window.location.href = '/fritidshjem#indskriving_og_takster_fritidshjem'">  
-        <column>
+        <data-column>
           <h3 class="h3_frontpage">Fritidshjem</h3>
-        </column>
-        <column id="children_legs">
+        </data-column>
+        <data-column id="children_legs">
            
-        </column>
-        <column>
+        </data-column>
+        <data-column>
           <div class="read_more">
             <a href="fritidshjem/#indskriving_og_takster_fritidshjem">Læs mere</a>
           </div>
-        </column>
+        </data-column>
       </vertical-split>
 
     </vertical-splits>

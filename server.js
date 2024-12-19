@@ -334,7 +334,7 @@ let buildStructure = ((fileMeta, structurePath, structureType) => {
 
             if (tagData == "/global/header.htm"){
                 let content_parts = file_data.split("<body>");
-                content_parts[1] = content_parts[1].replace("nav-id=\"" + mainMenu + "\"", "nav-id=\"" + mainMenu + "\" active");
+                content_parts[1] = content_parts[1].replace("data-nav-id=\"" + mainMenu + "\"", "data-nav-id=\"" + mainMenu + "\" data-active");
                 if (folders.length != 0){
                     content_parts[1] = content_parts[1].replace("<location-box>", "<location-box>" + str);
 
@@ -342,7 +342,7 @@ let buildStructure = ((fileMeta, structurePath, structureType) => {
                     let dubMenuDom = "";
                     for (const file of fs.readdirSync(subNavPath)){
                         if (fs.statSync(subNavPath + path.sep + file).isDirectory()){
-                            dubMenuDom += "<a href='/" + folders[0] + "/" + file + "'" + (((folders.length >= 2) && file == folders[1]) ? " active" : "")
+                            dubMenuDom += "<a href='/" + folders[0] + "/" + file + "'" + (((folders.length >= 2) && file == folders[1]) ? " data-active" : "")
                                        + "><vertical-center>" + to_user_freindly_string(file) + "</vertical-center></a>";
                         }
                     }
@@ -353,7 +353,7 @@ let buildStructure = ((fileMeta, structurePath, structureType) => {
                         let subNavPath = path.join(fileMeta.contents_root, (folders[0] + path.sep + folders[1] + path.sep));
                         for (const file of fs.readdirSync(subNavPath)){
                             if (fs.statSync(subNavPath + file).isDirectory()){
-                                dubMenuDom2 += "<a href='/" + folders[0] + "/" + folders[1] + "/" + file + "'" + (((folders.length > 2) && file == folders[2]) ? " active" : "")
+                                dubMenuDom2 += "<a href='/" + folders[0] + "/" + folders[1] + "/" + file + "'" + (((folders.length > 2) && file == folders[2]) ? " data-active" : "")
                                         + "><vertical-center>" + to_user_freindly_string(file) + "</vertical-center></a>";
                             }
                         }
@@ -394,7 +394,8 @@ let buildStructure = ((fileMeta, structurePath, structureType) => {
                         file_data_string = file_data_string.replace("</head>", "\t<link rel='stylesheet' href=\"" + css_path + "\">\n</head>");
                     }
                     else {
-                        file_data_string += "<style>" + fs.readFileSync(_path, 'utf8') + "</style>";
+                        file_data_string = file_data_string.replace("</head>", "\t<style>" + fs.readFileSync(_path, 'utf8') + "</style>\n</head>");
+                        // file_data_string += "<style>" + fs.readFileSync(_path, 'utf8') + "</style>";
                     }
                 }
                 else {
@@ -420,6 +421,12 @@ let buildStructure = ((fileMeta, structurePath, structureType) => {
             let class_name = "file-" + fileMeta.dirpath.split(path.sep).pop() + "-" + fileMeta.basename.substring(0, (fileMeta.basename.length - fileMeta.type.length));
             file_data_string = file_data_string.replace("<head>", "<head>\n\t<style>." + class_name + "-display { display:block; }</style>");
             file_data_string = file_data_string.replace("<head>", "<head>\n\t<style>." + class_name + "-hide { display:none; }</style>");
+            let title = fileMeta.dirpath.split(path.sep).pop();
+            console.log("cake", fileMeta.dirpath.split(path.sep).pop());
+            file_data_string = file_data_string.replace("<head>", "<head><title>" + to_user_freindly_string(title) + "</title>");
+            if (title == "indmelding"){
+                file_data_string = file_data_string.replace('id="signup_btn"', 'id="signup_btn" class="red"');
+            }
             return file_data_string;
         });
     
@@ -430,7 +437,7 @@ let buildStructure = ((fileMeta, structurePath, structureType) => {
             else {
                 promise.then((data_str) => {
                     file_data_string = data_str;
-                    resolve(beforeClose());
+                    resolve(file_data_string);
                 }).catch((err) => {
                     reject(err);
                 });
