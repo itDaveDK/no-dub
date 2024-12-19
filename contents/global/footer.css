@@ -27,20 +27,32 @@ a{
     text-decoration: none;
 }
 
-a:visited{
+footer a:visited{
     color:inherit;
 }
 
-a:hover{
+footer a:hover{
     color:#006854;
 }
 
 /* puts each of the column in the center and so the spacing between any items are equal */
-footer{
+footer > div:first-child{
     display:flex;
     justify-content:space-evenly; 
     background-color:#a0d9ef;
     border-top: solid 4px;
+    width: 100%;
+}
+
+footer {
+    width: 100%;
+    background-color:#a0d9ef;
+}
+
+#education_only {
+    padding: 8px;
+    padding-bottom: 16px;
+    text-align:center;
 }
 
 /* flex-grow divides space equally for all of the children of flexcontainer class because of child combinator selecter 'footer > *'  */
