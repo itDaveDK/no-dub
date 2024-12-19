@@ -3,7 +3,7 @@
     background-size: auto 100%;
 }
 
-#choices {
+.choices {
     justify-content:center;
     display:flex;
     gap:5%;
@@ -61,6 +61,7 @@ values-box {
     display:flex;
     gap:2%;
     margin:2%;
+    margin-bottom: 8vh;
 }
 
 value {
@@ -82,10 +83,6 @@ value {
     width:100%;
     padding-top:5vh;
     padding-bottom:5vh;
-}
-
-values-box {
-    margin-bottom: 8vh;
 }
 
 #registration > vertical-splits {
