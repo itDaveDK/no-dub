@@ -21,7 +21,7 @@ a.choice {
 
 a.choice > p {
     margin-top: 25vh;
-    font-size:300%;
+    font-size:min(4vw, 400%);
     min-width:70%;
     margin-left:10%;
     margin-right:10%;
@@ -117,7 +117,8 @@ value {
 
 #children_legs{
     background-image: url('/global/images/legs_of_children.webp');
-    background-size: 100% auto;
+    background-size: auto auto;
+    background-position: center;
     height:40vh;
     width:100%;
 }
@@ -126,4 +127,13 @@ value {
     text-align:center;
 	font-size:180%;
     color:white;
+}
+
+@media only screen and (max-width: 760px) {
+    values-box {
+        flex-wrap: wrap;
+        flex-grow: 0;
+        flex-direction: column;
+        gap: 20px;
+    }
 }

@@ -11,7 +11,7 @@ flex-column {
     flex-direction: column;
     border-radius: 5px;
     margin:25px;
-    }
+}
 
 p{
     margin:3px;
@@ -57,3 +57,21 @@ footer {
 
 /* flex-grow divides space equally for all of the children of flexcontainer class because of child combinator selecter 'footer > *'  */
 
+footer h2 {
+    text-align: left;
+    padding-left:0;
+}
+
+@media only screen and (max-width: 600px) {
+    footer > div {
+        flex-wrap: wrap;
+        flex-grow: 0;
+    }
+}
+
+@media only screen and (max-width: 760px) {
+    footer > div {
+        flex-wrap: wrap;
+        flex-grow: 0;
+    }
+}

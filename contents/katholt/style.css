@@ -104,3 +104,27 @@ div[data-value="3"] {
     max-width:80%;
     margin:auto;
 }
+
+@media only screen and (max-width: 760px) {
+    #bes_for, #values_flex, #about_us_and_contact_flex {
+        flex-direction: column;
+    }
+    #bes_for > *, #values_flex > *, #about_us_and_contact_flex > * {
+        max-width:100% !important;
+        margin:2.5vw;
+    }
+
+    #about_us_and_contact_flex > *:first-child {
+        padding:30px;
+    }
+
+    #katholt_values {
+        width:100% !important;
+    }
+}
+
+@media only screen and (max-width: 1100px) {
+    kindergarten-aftercare h3 {
+        font-size: 1.2em !important;
+    }
+}
