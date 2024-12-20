@@ -21,7 +21,7 @@ a.choice {
 
 a.choice > p {
     margin-top: 25vh;
-    font-size:300%;
+    font-size:min(4vw, 400%);
     min-width:70%;
     margin-left:10%;
     margin-right:10%;
@@ -31,11 +31,14 @@ a.choice > p {
 
 a.choice:first-child {
     background-image: url('/global/images/happy_kindergarden_children_and_parents.webp');
+    background-size: auto 100%;
+    background-repeat: no-repeat;
 }
 
 a.choice:nth-child(2) {
     background-image: url('/global/images/children_having_fun.webp');
     background-size: auto 100%;
+    background-repeat: no-repeat;
 }
 
 #choices-outer .read_more {
@@ -69,8 +72,10 @@ value {
 }
 
 #values-outer {
-    background-image: url('/global/images/grass_and_sky.webp');
-    background-position: top;
+    background-image: url('/global/images/grass_and_sky.png');
+    background-position: bottom;
+    background-color: #C3E8F3;
+    background-repeat: no-repeat;
     background-size: 100% auto;
 }
 
@@ -95,8 +100,11 @@ value {
 }
 
 #registration {
-    background-image: url('/global/images/worms_in_dirt.webp');
-    background-size: 100% auto;
+    background-image: url('/global/images/worms_in_dirt.png');
+    background-size: auto auto;
+    background-position: center;
+    background-color:#412B12;
+    background-repeat: no-repeat;
 }
 
 #kindergarden_boy {
@@ -109,7 +117,8 @@ value {
 
 #children_legs{
     background-image: url('/global/images/legs_of_children.webp');
-    background-size: 100% auto;
+    background-size: auto auto;
+    background-position: center;
     height:40vh;
     width:100%;
 }
@@ -118,4 +127,13 @@ value {
     text-align:center;
 	font-size:180%;
     color:white;
+}
+
+@media only screen and (max-width: 760px) {
+    values-box {
+        flex-wrap: wrap;
+        flex-grow: 0;
+        flex-direction: column;
+        gap: 20px;
+    }
 }

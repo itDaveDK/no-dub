@@ -44,7 +44,7 @@ main-content-box {
 h1 {
 	font-size: var(--h1-size);
 	text-align:center;
-	min-width:60;
+	min-width:60%;
 	padding:1vw;
 }
 
@@ -164,8 +164,58 @@ time-lines {
 }
 
 .red {
-	color:red;
-	border-bottom: 2px solid red;
+	color:rgb(255,200,200);
+	border-bottom: 2px solid rgb(255,200,200);
 	border-top: 2px solid transparent;
 	padding-top:calc(2.5% - 2px) !important;
+}
+
+@media only screen and (max-width: 760px) {
+	:root{
+		--h1-size: 8vw;
+	}
+
+	h3 {
+		font-size: calc(calc(var(--h1-size) * 0.61803398876) * 0.61803398876);
+	}
+
+	/* For 'Børnehaven' and 'Fritidshjem' */
+	#food_plan {
+        flex-direction: column;
+    }
+    #plan, #food {
+        margin:2.5vw;
+		flex-grow:0;
+		flex-basis: content;
+    }
+}
+
+
+@media only screen and (max-width: 500px) {
+	:root{
+		--h1-size: 9vw;
+	}
+
+	h1{
+		padding-left:0 !important;
+		padding-right:0 !important;
+	}
+
+	h3 {
+		font-size: calc(calc(var(--h1-size) * .8));
+	}
+
+	nav {
+		flex-wrap: wrap;
+	}
+
+	nav > * {
+        flex-grow: 0;
+		padding-top:8px;
+		padding-bottom:8px;
+	}
+
+	custom-button {
+		padding-top:20% !important;
+	}
 }

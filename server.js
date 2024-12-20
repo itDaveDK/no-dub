@@ -422,8 +422,7 @@ let buildStructure = ((fileMeta, structurePath, structureType) => {
             file_data_string = file_data_string.replace("<head>", "<head>\n\t<style>." + class_name + "-display { display:block; }</style>");
             file_data_string = file_data_string.replace("<head>", "<head>\n\t<style>." + class_name + "-hide { display:none; }</style>");
             let title = fileMeta.dirpath.split(path.sep).pop();
-            console.log("cake", fileMeta.dirpath.split(path.sep).pop());
-            file_data_string = file_data_string.replace("<head>", "<head><title>" + to_user_freindly_string(title) + "</title>");
+            file_data_string = file_data_string.replace("<head>", "<head><title>" + (title == "contents".toLowerCase() ? "Forside" : to_user_freindly_string(title)) + "</title>");
             if (title == "indmelding"){
                 file_data_string = file_data_string.replace('id="signup_btn"', 'id="signup_btn" class="red"');
             }
