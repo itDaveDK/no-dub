@@ -445,19 +445,5 @@ let buildStructure = ((fileMeta, structurePath, structureType) => {
     });
 });
 
-let commentStart = ((type) => {
-    if (type == "js" || type == "css")
-        return "/***";
-    if (type == "htm" || type == "html")
-        return "<!--";
-});
-
-let commentEnd = ((type) => {
-    if (type == "js" || type == "css")
-        return "***/";
-    if (type == "htm" || type == "html")
-        return "-->";
-});
-
 server = http.createServer(listener);
 server.listen(1337);
