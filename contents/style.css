@@ -72,7 +72,7 @@ value {
 }
 
 #values-outer {
-    background-image: url('/global/images/grass_and_sky.webp');
+    background-image: url('/global/images/grass_and_sky.png');
     background-position: bottom;
     background-color: #C3E8F3;
     background-repeat: no-repeat;
@@ -100,10 +100,10 @@ value {
 }
 
 #registration {
-    background-image: url('/global/images/worms_in_dirt.webp');
+    background-image: url('/global/images/worms_in_dirt.png');
     background-size: auto auto;
     background-position: center;
-    background-color:#493016;
+    background-color:#412B12;
     background-repeat: no-repeat;
 }
 
